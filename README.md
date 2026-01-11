@@ -84,7 +84,7 @@ docker build -t flink-python:1.18 -f Dockerfile.flink .
 Start the entire pipeline using Docker Compose:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will start:
@@ -101,7 +101,7 @@ Check that all services are healthy:
 
 ```bash
 # Check container status
-docker-compose ps
+docker compose ps
 
 # Run the health check script (optional)
 bash health_check.sh
@@ -224,17 +224,17 @@ Stop all services:
 
 ```bash
 # Stop containers
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (deletes all data)
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Project Structure
 
 ```
 kafka_flink_elasti_kibana/
-├── docker-compose.yml              # Main orchestration file
+├── docker compose.yml              # Main orchestration file
 ├── Dockerfile.flink                # Custom Flink+Python image
 ├── requirements.txt                # Python dependencies
 ├── start-pipeline.sh               # Automated startup script
@@ -249,7 +249,7 @@ kafka_flink_elasti_kibana/
 │   ├── Kafka_tweets_consumer.py             # Debug consumer (optional)
 │   └── kafka_flink_wordcount_v3.py          # Flink processing job
 ├── docker-hadoop/                  # Optional Hadoop/HDFS setup
-│   ├── docker-compose.yml          # Hadoop services configuration
+│   ├── docker compose.yml          # Hadoop services configuration
 │   ├── hadoop.env                  # Hadoop environment variables
 │   └── ...                         # Hadoop Docker build files
 └── README.md
@@ -294,9 +294,9 @@ Kibana provides real-time dashboards for analyzing word trends, geographic distr
 docker stats
 
 # View logs for specific service
-docker-compose logs kafka
-docker-compose logs flink-jobmanager
-docker-compose logs elasticsearch
+docker compose logs kafka
+docker compose logs flink-jobmanager
+docker compose logs elasticsearch
 ```
 
 ### Kafka Connection Issues
@@ -316,12 +316,12 @@ curl http://localhost:8081/jobs
 ```
 
 ### Port Already in Use
-If you get port conflicts, modify the port mappings in [docker-compose.yml](docker-compose.yml).
+If you get port conflicts, modify the port mappings in [docker compose.yml](docker compose.yml).
 
 ## Performance Tuning
 
 - **Kafka**: Adjust `KAFKA_NUM_PARTITIONS` for parallelism
-- **Flink**: Increase TaskManager slots in [docker-compose.yml](docker-compose.yml)
+- **Flink**: Increase TaskManager slots in [docker compose.yml](docker compose.yml)
 - **Elasticsearch**: Increase JVM heap size via `ES_JAVA_OPTS`
 - **Producer Rate**: Modify sleep time in [mock_word_count_tweets_producer.py](word_count/mock_word_count_tweets_producer.py)
 
@@ -329,20 +329,20 @@ If you get port conflicts, modify the port mappings in [docker-compose.yml](dock
 
 ```bash
 # View all running containers
-docker-compose ps
+docker compose ps
 
 # Follow logs for all services
-docker-compose logs -f
+docker compose logs -f
 
 # Restart a specific service
-docker-compose restart kafka
+docker compose restart kafka
 
 # Scale Flink TaskManagers
-docker-compose up -d --scale flink-taskmanager=3
+docker compose up -d --scale flink-taskmanager=3
 
 # Clean everything and start fresh
-docker-compose down -v
-docker-compose up -d
+docker compose down -v
+docker compose up -d
 ```
 
 ## Advanced: Running with Hadoop HDFS Storage (Optional)
@@ -387,7 +387,7 @@ This section covers how to extend the basic pipeline with Apache Hadoop HDFS for
 
 ### Additional Hadoop Services
 
-The Hadoop stack ([docker-hadoop/docker-compose.yml](docker-hadoop/docker-compose.yml)) includes:
+The Hadoop stack ([docker-hadoop/docker compose.yml](docker-hadoop/docker compose.yml)) includes:
 
 | Service | Purpose | Port |
 |---------|---------|------|
@@ -442,7 +442,7 @@ Navigate to the docker-hadoop directory and start all Hadoop services:
 
 ```bash
 cd docker-hadoop
-docker-compose up -d
+docker compose up -d
 cd ..
 ```
 
@@ -461,7 +461,7 @@ Check that all Hadoop containers are healthy:
 
 ```bash
 # Check container status
-docker-compose -f docker-hadoop/docker-compose.yml ps
+docker compose -f docker-hadoop/docker compose.yml ps
 
 # Verify NameNode web UI is accessible
 curl -s http://localhost:9870 > /dev/null && echo "NameNode is running" || echo "NameNode not ready"
@@ -501,7 +501,7 @@ If you haven't already, start the main pipeline services:
 docker build -t flink-python:1.18 -f Dockerfile.flink .
 
 # Start Kafka, Flink, Elasticsearch, Kibana
-docker-compose up -d
+docker compose up -d
 
 # Wait for services
 sleep 20
@@ -602,7 +602,7 @@ deactivate
 
 # 4. Start Hadoop services
 cd docker-hadoop
-docker-compose up -d
+docker compose up -d
 cd ..
 sleep 30
 
@@ -610,7 +610,7 @@ sleep 30
 bash init_hdfs.sh
 
 # 6. Start main pipeline
-docker-compose up -d
+docker compose up -d
 sleep 20
 
 # ===== START DATA PROCESSING =====
@@ -651,11 +651,11 @@ firefox http://localhost:5601  # Kibana
 kill $PRODUCER_PID $HDFS_PID
 
 # Stop main pipeline
-docker-compose down
+docker compose down
 
 # Stop Hadoop
 cd docker-hadoop
-docker-compose down
+docker compose down
 cd ..
 ```
 
@@ -760,11 +760,11 @@ The [hdfs_web_consumer_v4.py](hdfs_web_consumer_v4.py) script implements intelli
 
 ```bash
 # Stop main pipeline
-docker-compose down
+docker compose down
 
 # Stop Hadoop services
 cd docker-hadoop
-docker-compose down
+docker compose down
 cd ..
 ```
 
@@ -774,11 +774,11 @@ To completely clean up including all stored data:
 
 ```bash
 # Stop and remove main pipeline volumes
-docker-compose down -v
+docker compose down -v
 
 # Stop and remove Hadoop volumes
 cd docker-hadoop
-docker-compose down -v
+docker compose down -v
 cd ..
 
 # Remove Docker network (optional)
@@ -886,8 +886,8 @@ ping -c 2 datanode
 cat /etc/hosts | grep -E "namenode|datanode|kafka|resourcemanager"
 
 # 5. Restart services after fixing /etc/hosts
-docker-compose restart
-cd docker-hadoop && docker-compose restart && cd ..
+docker compose restart
+cd docker-hadoop && docker compose restart && cd ..
 ```
 
 ### Data Storage Comparison
@@ -927,5 +927,5 @@ Feel free to submit issues and enhancement requests!
 ---
 
 **Note**: This project provides two deployment options:
-- **Basic Pipeline**: Use the main [docker-compose.yml](docker-compose.yml) for Kafka → Flink → Elasticsearch → Kibana (real-time visualization)
+- **Basic Pipeline**: Use the main [docker compose.yml](docker compose.yml) for Kafka → Flink → Elasticsearch → Kibana (real-time visualization)
 - **Full Stack with HDFS**: Add the [docker-hadoop/](docker-hadoop/) services for persistent distributed storage and historical analytics
