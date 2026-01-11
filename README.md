@@ -405,9 +405,36 @@ All services use **Hadoop 3.2.1** with Java 8.
 - Docker network `bigdata-network` (created in one-time setup)
 - At least 16GB RAM total (8GB for Hadoop services)
 - Linux system (all commands use bash syntax)
-- No `/etc/hosts` modifications needed - Docker DNS handles hostname resolution
+- `/etc/hosts` configuration for proper hostname resolution (see below)
 
 ### Hadoop Quick Start
+
+#### 0. Configure /etc/hosts (One-Time Setup)
+
+For proper hostname resolution between your host machine and Hadoop containers, add the following line to your `/etc/hosts` file:
+
+```bash
+# Edit /etc/hosts with sudo privileges
+sudo nano /etc/hosts
+
+# Add this line at the end of the file:
+127.0.0.1 namenode datanode kafka resourcemanager
+```
+
+Save and exit (Ctrl+O, Enter, Ctrl+X in nano).
+
+**Why this is needed**: The Hadoop services and your Python scripts need to resolve container hostnames. While Docker's internal DNS handles container-to-container communication, the host machine needs these entries to access services by their container names.
+
+Verify the configuration:
+
+```bash
+# Test hostname resolution
+ping -c 2 namenode
+ping -c 2 datanode
+ping -c 2 kafka
+```
+
+These should resolve to `127.0.0.1` (localhost).
 
 #### 1. Start Hadoop Services
 
@@ -555,6 +582,9 @@ Here's the complete step-by-step workflow for running the full pipeline with HDF
 
 ```bash
 # ===== ONE-TIME SETUP =====
+
+# 0. Configure /etc/hosts (requires sudo)
+echo "127.0.0.1 namenode datanode kafka resourcemanager" | sudo tee -a /etc/hosts
 
 # 1. Create Docker network
 docker network create bigdata-network
@@ -835,6 +865,29 @@ docker network inspect bigdata-network
 # Test connectivity from main pipeline to Hadoop
 docker exec flink-jobmanager ping -c 3 namenode
 docker exec kafka ping -c 3 namenode
+```
+
+#### Hostname Resolution Errors
+
+If you get errors like "cannot resolve namenode" or "unknown host":
+
+```bash
+# 1. Verify /etc/hosts entry exists
+grep "namenode datanode kafka resourcemanager" /etc/hosts
+
+# 2. If missing, add it
+echo "127.0.0.1 namenode datanode kafka resourcemanager" | sudo tee -a /etc/hosts
+
+# 3. Test hostname resolution
+ping -c 2 namenode
+ping -c 2 datanode
+
+# 4. If still not working, check for duplicate entries
+cat /etc/hosts | grep -E "namenode|datanode|kafka|resourcemanager"
+
+# 5. Restart services after fixing /etc/hosts
+docker-compose restart
+cd docker-hadoop && docker-compose restart && cd ..
 ```
 
 ### Data Storage Comparison
