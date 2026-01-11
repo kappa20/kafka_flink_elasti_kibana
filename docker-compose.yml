@@ -51,7 +51,6 @@ services:
     volumes:
       - ./flink-sql-connector-kafka-3.0.1-1.18.jar:/opt/flink/lib/flink-sql-connector-kafka-3.0.1-1.18.jar
       - ./flink-sql-connector-elasticsearch7-3.0.1-1.17.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7-3.0.1-1.17.jar
-      - ./kafka_flink_elasticsearch_streaming_v2.py:/opt/flink/kafka_flink_elasticsearch_streaming_v2.py
       - ./word_count/kafka_flink_wordcount_v3.py:/opt/flink/kafka_flink_wordcount_v3.py
       - flink_data:/opt/flink/data
 
@@ -73,7 +72,6 @@ services:
     volumes:
       - ./flink-sql-connector-kafka-3.0.1-1.18.jar:/opt/flink/lib/flink-sql-connector-kafka-3.0.1-1.18.jar
       - ./flink-sql-connector-elasticsearch7-3.0.1-1.17.jar:/opt/flink/lib/flink-sql-connector-elasticsearch7-3.0.1-1.17.jar
-      - ./kafka_flink_elasticsearch_streaming_v2.py:/opt/flink/kafka_flink_elasticsearch_streaming_v2.py
       - ./word_count/kafka_flink_wordcount_v3.py:/opt/flink/kafka_flink_wordcount_v3.py
       - flink_data:/opt/flink/data
 
