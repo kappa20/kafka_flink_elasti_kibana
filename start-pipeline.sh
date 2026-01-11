@@ -265,7 +265,7 @@ fi
 
 # Step 4: Start main pipeline services
 print_step "4/8" "Starting Kafka, Flink, Elasticsearch, and Kibana..."
-docker-compose up -d
+docker compose up -d
 print_info "All services started"
 print_info "Waiting 20 seconds for services to initialize..."
 sleep 20
