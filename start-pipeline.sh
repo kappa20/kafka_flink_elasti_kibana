@@ -40,30 +40,31 @@ fi
 echo ""
 
 # Step 2: Build custom Flink image
-print_info "Step 2: Building custom Flink image with Python support..."
-docker build -t flink-python:1.18 -f Dockerfile.flink .
-print_info "Flink image built successfully"
-echo ""
+# print_info "Step 2: Building custom Flink image with Python support..."
+# docker build -t flink-python:1.18 -f Dockerfile.flink .
+# print_info "Flink image built successfully"
+# echo ""
 
-# Step 3: Start Hadoop services
-print_info "Step 3: Starting Hadoop services (HDFS, YARN)..."
-cd docker-hadoop
+# # Step 3: Start Hadoop services
+# print_info "Step 3: Starting Hadoop services (HDFS, YARN)..."
+# cd docker-hadoop
 
-# Clean up any existing containers to avoid metadata issues
-print_info "Cleaning up existing Hadoop containers..."
-docker-compose down 2>/dev/null || true
-docker rm -f namenode datanode resourcemanager nodemanager historyserver 2>/dev/null || true
+# # Clean up any existing containers to avoid metadata issues
+# print_info "Cleaning up existing Hadoop containers..."
+# docker-compose down 2>/dev/null || true
+# docker rm -f namenode datanode resourcemanager nodemanager historyserver 2>/dev/null || true
 
-# Start Hadoop services
-print_info "Starting fresh Hadoop containers..."
-docker-compose up -d
-cd ..
-print_info "Hadoop services started"
-print_info "Waiting 30 seconds for Hadoop services to initialize..."
-sleep 30
-echo ""
+# # Start Hadoop services
+# print_info "Starting fresh Hadoop containers..."
+# docker-compose up -d
+# cd ..
+# print_info "Hadoop services started"
+# print_info "Waiting 30 seconds for Hadoop services to initialize..."
+# sleep 30
+# echo ""
 
 # Step 4: Start Kafka, Flink, and Elasticsearch services
+print_info "Step 2 3  are skipped for now"
 print_info "Step 4: Starting Kafka, Flink, Elasticsearch, and Kibana..."
 docker-compose up -d
 print_info "All services started"

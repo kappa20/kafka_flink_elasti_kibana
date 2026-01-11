@@ -38,7 +38,7 @@ else
 fi
 
 # HDFS NameNode
-echo -n "HDFS NameNode: "
+echo -n "HDFS NameNode [its not necessary if you want only visualisation]: "
 if curl -sf http://localhost:9870 >/dev/null 2>&1; then
     echo -e "${GREEN}✓ OK${NC}"
 else
