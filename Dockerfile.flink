@@ -1,0 +1,31 @@
+FROM flink:1.18
+
+USER root
+
+# Install Python 3 and pip
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create symbolic links
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Upgrade pip and install PyFlink + requirements
+# Ajout de nltk pour votre logique de Word Count
+RUN pip3 install --upgrade pip && \
+    pip3 install apache-flink==1.18.0 nltk
+
+# Important: S'assurer que les permissions sont correctes pour l'utilisateur flink
+RUN chown -R flink:flink /opt/flink
+
+# Optionnel: Télécharger les stopwords si vous utilisez nltk.corpus dans le script
+# RUN python3 -m nltk.downloader stopwords
+
+# Télécharger le JAR flink-python directement dans le dossier lib de flink
+RUN wget https://repo1.maven.org/maven2/org/apache/flink/flink-python/1.18.0/flink-python-1.18.0.jar -P /opt/flink/lib/
+
+# S'assurer que l'utilisateur flink possède les fichiers
+RUN chown -R flink:flink /opt/flink/lib/
+
+USER flink
+WORKDIR /opt/flink

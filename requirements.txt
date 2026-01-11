@@ -1,0 +1,11 @@
+# Kafka Dependencies
+kafka-python==2.0.2
+
+# Flink Dependencies
+apache-flink==1.18.0
+
+# HDFS Client
+hdfs==2.7.3
+
+# Rich for better console output
+rich==13.7.0
