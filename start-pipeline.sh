@@ -207,7 +207,7 @@ else
     echo "  ✓ Kafka, Flink, Elasticsearch, Kibana"
     echo "  ✓ Python virtual environment with dependencies"
     echo ""
-    echo "System requirements: 8GB RAM, 4+ CPU cores"
+    echo "System requirements: 6GB RAM, 4+ CPU cores"
 fi
 echo ""
 read -p "Continue with installation? [Y/n]: " CONFIRM
@@ -284,16 +284,16 @@ fi
 
 # Step 6: Setup Python virtual environment
 print_step "6/8" "Setting up Python virtual environment..."
-if [ ! -d "kafka_3_10" ]; then
+if [ ! -d "venv" ]; then
     print_info "Creating virtual environment with $PYTHON_CMD..."
-    $PYTHON_CMD -m venv kafka_3_10
+    $PYTHON_CMD -m venv venv
     print_info "Virtual environment created"
 else
-    print_warn "Virtual environment 'kafka_3_10' already exists"
+    print_warn "Virtual environment 'venv' already exists"
 fi
 
 print_info "Installing Python dependencies..."
-source kafka_3_10/bin/activate
+source venv/bin/activate
 pip install --upgrade pip --quiet
 pip install -r requirements.txt --quiet
 deactivate
@@ -383,7 +383,7 @@ echo ""
 print_info "Next Steps to Start Data Processing:"
 echo ""
 echo "1. Activate Python environment:"
-echo "   ${GREEN}source kafka_3_10/bin/activate${NC}"
+echo "   ${GREEN}source venv/bin/activate${NC}"
 echo ""
 echo "2. Start the tweet producer (Terminal 1):"
 echo "   ${GREEN}python word_count/mock_word_count_tweets_producer.py${NC}"

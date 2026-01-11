@@ -41,7 +41,7 @@ docker-compose up -d
 ### Step 3: Activate Python Environment
 
 ```bash
-source kafka_3_10/bin/activate
+source venv/bin/activate
 ```
 
 ### Step 4: Start Producer
@@ -56,13 +56,13 @@ Keep this running in Terminal 1.
 
 **Terminal 2 - Basic Consumer:**
 ```bash
-source kafka_3_10/bin/activate
+source venv/bin/activate
 python word_count/Kafka_tweets_consumer.py
 ```
 
 **Terminal 3(optional) - HDFS Consumer [Not required]:**
 ```bash
-source kafka_3_10/bin/activate
+source venv/bin/activate
 python hdfs_web_consumer.py
 ```
 

@@ -115,13 +115,13 @@ Create and activate a Python virtual environment:
 
 ```bash
 # Create virtual environment
-python -m venv kafka_3_10
+python -m venv venv
 
 # Activate it (Windows Git Bash)
-source kafka_3_10/Scripts/activate
+source venv/Scripts/activate
 
 # Or on Linux/Mac
-source kafka_3_10/bin/activate
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -507,8 +507,8 @@ docker-compose up -d
 sleep 20
 
 # Set up Python environment
-python3 -m venv kafka_3_10
-source kafka_3_10/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -593,8 +593,8 @@ docker network create bigdata-network
 docker build -t flink-python:1.18 -f Dockerfile.flink .
 
 # 3. Create Python virtual environment
-python3 -m venv kafka_3_10
-source kafka_3_10/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 deactivate
 
@@ -616,7 +616,7 @@ sleep 20
 # ===== START DATA PROCESSING =====
 
 # 7. Activate Python environment
-source kafka_3_10/bin/activate
+source venv/bin/activate
 
 # 8. Start producer (Terminal 1)
 python word_count/mock_word_count_tweets_producer.py &
