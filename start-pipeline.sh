@@ -36,6 +36,78 @@ print_step() {
     echo -e "${BLUE}[STEP $1]${NC} $2"
 }
 
+# Check if Docker is installed
+print_info "Checking Docker installation..."
+if ! command -v docker &> /dev/null; then
+    print_error "Docker is not installed!"
+    echo ""
+    echo "Docker is required to run this pipeline."
+    echo ""
+    read -p "Would you like to install Docker now? [Y/n]: " INSTALL_DOCKER
+    INSTALL_DOCKER=${INSTALL_DOCKER:-Y}
+
+    if [[ "$INSTALL_DOCKER" =~ ^[Yy]$ ]]; then
+        print_info "Running Docker installation script..."
+        echo ""
+
+        # Check if installation script exists
+        if [ -f "install-docker-ubuntu.sh" ]; then
+            chmod +x install-docker-ubuntu.sh
+            sudo ./install-docker-ubuntu.sh
+
+            print_info "Docker installation completed!"
+            echo ""
+            print_warn "Please log out and log back in, or run: newgrp docker"
+            print_warn "Then re-run this script: ./start-pipeline.sh"
+            exit 0
+        else
+            print_error "Installation script 'install-docker-ubuntu.sh' not found!"
+            echo ""
+            echo "Please install Docker manually:"
+            echo "  • Ubuntu/Debian: https://docs.docker.com/engine/install/ubuntu/"
+            echo "  • Or see DOCKER_INSTALLATION_GUIDE.md for detailed instructions"
+            exit 1
+        fi
+    else
+        print_error "Docker is required. Installation cancelled."
+        echo ""
+        echo "Please install Docker manually and re-run this script."
+        echo "See DOCKER_INSTALLATION_GUIDE.md for instructions."
+        exit 1
+    fi
+else
+    print_info "Docker is installed ($(docker --version))"
+fi
+
+# Check if Docker daemon is running
+if ! docker info &> /dev/null; then
+    print_error "Docker daemon is not running!"
+    echo ""
+    echo "Please start Docker service:"
+    echo "  sudo systemctl start docker"
+    exit 1
+else
+    print_info "Docker daemon is running"
+fi
+
+# Check if user can run Docker without sudo
+if ! docker ps &> /dev/null; then
+    print_warn "Cannot run Docker without sudo"
+    print_warn "You may need to add your user to the docker group:"
+    echo "  sudo usermod -aG docker \$USER"
+    echo "  newgrp docker"
+    echo ""
+    print_warn "Attempting to continue with sudo..."
+    # Check if sudo works
+    if ! sudo docker ps &> /dev/null; then
+        print_error "Cannot run Docker even with sudo!"
+        exit 1
+    fi
+else
+    print_info "Docker permissions configured correctly"
+fi
+echo ""
+
 # Welcome banner
 clear
 print_header "Kafka-Flink-Elasticsearch Pipeline Installer"
